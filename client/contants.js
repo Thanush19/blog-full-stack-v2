@@ -1,0 +1,1 @@
+export const REACT_APP_CLERK_PUBLISHABLE_KEY = "​pk_test_Zm9uZC1jb3lvdGUtODAuY2xlcmsuYWNjb3VudHMuZGV2JA"​
