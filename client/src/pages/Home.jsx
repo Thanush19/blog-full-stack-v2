@@ -6,6 +6,8 @@ const Home = () => {
   const navigate = useNavigate();
   const { isLoaded, isSignedIn, user } = useUser();
   const { signOut } = useAuth();
+  const { userId, sessionId, getToken } = useAuth();
+
   const handleSignOut = async () => {
     await signOut();
     navigate("/sign-in");
@@ -24,6 +26,12 @@ const Home = () => {
         <button onClick={handleSignOut}>Sign Out</button>
       </div>
       <UserButton />
+      {isSignedIn && (
+        <>
+          <p>Write Blog post</p>
+          <p>See all blog posts</p>
+        </>
+      )}
     </>
   );
 };

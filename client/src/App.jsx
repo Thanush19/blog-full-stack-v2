@@ -11,6 +11,7 @@ import {
   UserButton,
 } from "@clerk/clerk-react";
 import ProtectedRoute from "../utils/ProtectedRoute";
+import CreatePost from "./pages/CreatePost";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+              <CreatePost />
             </ProtectedRoute>
           }
         />
