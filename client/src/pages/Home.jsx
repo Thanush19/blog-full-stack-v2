@@ -1,6 +1,6 @@
 import React from "react";
 import { UserButton } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUser, useAuth } from "@clerk/clerk-react";
 const Home = () => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const Home = () => {
       <UserButton />
       {isSignedIn && (
         <>
-          <p>Write Blog post</p>
+          <Link to="/create-post">Write Blog post</Link>
           <p>See all blog posts</p>
         </>
       )}

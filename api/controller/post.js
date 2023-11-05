@@ -1,11 +1,11 @@
-const pool = require("../db/db");
+const db = require("../db/db");
 
 const writePost = async (req, res) => {
   try {
-    const { user_id, title, image, description } = req.body;
-    const result = await pool.query(
-      "INSERT INTO posts (user_id, title, image, description) VALUES ($1, $2, $3, $4) RETURNING *",
-      [user_id, title, image, description]
+    const { user_id, title, image, description, content, tag } = req.body;
+    const result = await db.query(
+      "INSERT INTO posts (user_id, title, image, description, content, tag) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+      [user_id, title, image, description, content, tag]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -14,9 +14,9 @@ const writePost = async (req, res) => {
   }
 };
 
-const getAllPost = async (req, res) => {
+const getAllPosts = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM posts");
+    const result = await db.query("SELECT * FROM posts");
     res.status(200).json(result.rows);
   } catch (error) {
     console.error(error);
@@ -27,7 +27,7 @@ const getAllPost = async (req, res) => {
 const getPost = async (req, res) => {
   const post_id = req.params.post_id;
   try {
-    const result = await pool.query("SELECT * FROM posts WHERE post_id = $1", [
+    const result = await db.query("SELECT * FROM posts WHERE post_id = $1", [
       post_id,
     ]);
     if (result.rows.length === 0) {
@@ -44,7 +44,7 @@ const getPost = async (req, res) => {
 const deletePost = async (req, res) => {
   const post_id = req.params.post_id;
   try {
-    const result = await pool.query(
+    const result = await db.query(
       "DELETE FROM posts WHERE post_id = $1 RETURNING *",
       [post_id]
     );
@@ -61,11 +61,11 @@ const deletePost = async (req, res) => {
 
 const editPost = async (req, res) => {
   const post_id = req.params.post_id;
-  const { user_id, title, image, description } = req.body;
+  const { user_id, title, image, description, content, tag } = req.body;
   try {
-    const result = await pool.query(
-      "UPDATE posts SET user_id = $1, title = $2, image = $3, description = $4 WHERE post_id = $5 RETURNING *",
-      [user_id, title, image, description, post_id]
+    const result = await db.query(
+      "UPDATE posts SET user_id = $1, title = $2, image = $3, description = $4, content = $5, tag = $6 WHERE post_id = $7 RETURNING *",
+      [user_id, title, image, description, content, tag, post_id]
     );
     if (result.rows.length === 0) {
       res.status(404).json({ message: "Post not found" });
@@ -80,8 +80,8 @@ const editPost = async (req, res) => {
 
 module.exports = {
   writePost,
+  getAllPosts,
   getPost,
-  getAllPost,
   deletePost,
   editPost,
 };

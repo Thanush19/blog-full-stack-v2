@@ -3,7 +3,7 @@ const router = express.Router();
 const {
   writePost,
   getPost,
-  getAllPost,
+  getAllPosts, // Fix the controller import
   deletePost,
   editPost,
 } = require("../controller/post");
@@ -12,15 +12,15 @@ const {
 router.post("/write-post", writePost);
 
 // Get all posts
-router.get("/", getAllPost);
+router.get("/", getAllPosts); // Corrected the route path
 
 // Get a specific post by post_id
 router.get("/:post_id", getPost);
 
 // Delete a post by post_id
-router.delete("delete/:post_id", deletePost);
+router.delete("/delete/:post_id", deletePost); // Corrected the route path
 
 // Edit a post by post_id
-router.put("edit/:post_id", editPost);
+router.put("/edit/:post_id", editPost); // Corrected the route path
 
 module.exports = router;

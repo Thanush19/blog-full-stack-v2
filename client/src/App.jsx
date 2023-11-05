@@ -12,6 +12,7 @@ import {
 } from "@clerk/clerk-react";
 import ProtectedRoute from "../utils/ProtectedRoute";
 import CreatePost from "./pages/CreatePost";
+import AllPost from "./pages/AllPost";
 
 function App() {
   return (
@@ -22,7 +23,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/create-post"
+          element={
+            <ProtectedRoute>
               <CreatePost />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/posts"
+          element={
+            <ProtectedRoute>
+              <AllPost />
             </ProtectedRoute>
           }
         />
@@ -40,3 +56,9 @@ function App() {
 }
 
 export default App;
+
+// Base delivery URL
+// http://res.cloudinary.com/ddxqeeype
+//api cloudinary secret OD2NFCH7P8a33aYq8-3-rZ02Ysc
+//cloudName ddxqeeype
+//preset
