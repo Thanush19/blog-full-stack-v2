@@ -1,5 +1,4 @@
 -- Drop the existing "posts" table if it exists
-DROP TABLE IF EXISTS posts;
 
 -- Create the "posts" table with the new structure
 CREATE TABLE posts (
@@ -12,3 +11,5 @@ CREATE TABLE posts (
     content TEXT NOT NULL,
     tag VARCHAR(255) NOT NULL
 );
+ALTER TABLE posts
+ALTER COLUMN user_id TYPE VARCHAR(255);

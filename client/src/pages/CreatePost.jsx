@@ -2,33 +2,34 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-
+import { useAuth } from "@clerk/clerk-react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import backend_url from "../../utils/constants";
 export default function CreatePost() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [content, setContent] = useState("");
-  const [tags, setTags] = useState([]);
-  const [imageURLs, setImageURLs] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [images, setImages] = useState([]);
+  const { isLoaded, userId, sessionId, getToken } = useAuth();
+
+  const [formState, setFormState] = useState({
+    user_id: userId, // Set the user_id here
+    title: "",
+    description: "",
+    content: "",
+    tag: "",
+    image: "",
+  });
 
   const handleContentChange = (value) => {
-    setContent(value);
+    setFormState({ ...formState, content: value });
   };
 
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormState({ ...formState, [name]: value });
   };
 
-  const handleDescriptionChange = (event) => {
-    setDescription(event.target.value);
-  };
-
-  const handleTagChange = (event) => {
-    setTags(event.target.value.split(",").map((tag) => tag.trim()));
-  };
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
+
   useEffect(() => {
     cloudinaryRef.current = window.cloudinary;
     widgetRef.current = cloudinaryRef.current.createUploadWidget(
@@ -37,10 +38,57 @@ export default function CreatePost() {
         uploadPreset: "dd8cfcr1",
       },
       function (err, res) {
-        console.log(res);
+        if (!err && res && res.event === "success") {
+          // Handle the successful upload and store the secure URL
+          const secureImageUrl = res.info.secure_url;
+          setFormState({ ...formState, imageURL: secureImageUrl });
+        }
       }
     );
-  }, []);
+  }, [formState]);
+
+  const handleSubmit = async () => {
+    // Prepare your data for submission, including the imageURL
+    const postData = {
+      user_id: formState.user_id,
+      title: formState.title,
+      description: formState.description,
+      content: formState.content,
+      tag: formState.tags.split(",").map((tag) => tag.trim()),
+      image: formState.imageURL,
+    };
+
+    try {
+      // Send `postData` to your backend for further processing
+      const response = await axios.post(
+        `${backend_url}/posts/write-post`,
+        postData
+      );
+
+      // Handle the response from your server as needed
+      console.log("Post created:", response.data);
+
+      // Show a success notification
+      toast.success("Post submitted successfully!");
+    } catch (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        console.error(
+          "Server responded with status code:",
+          error.response.status
+        );
+        console.error("Response data:", error.response.data);
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error("No response received. Request made but no response.");
+      } else {
+        // Something happened in setting up the request
+        console.error("Error setting up the request:", error.message);
+      }
+      // Show an error notification
+      toast.error("Failed to submit the post.");
+    }
+  };
 
   return (
     <div className="CreatePost">
@@ -50,16 +98,16 @@ export default function CreatePost() {
         type="text"
         id="title"
         name="title"
-        value={title}
-        onChange={handleTitleChange}
+        value={formState.title}
+        onChange={handleInputChange}
       />
 
       <label htmlFor="description">Description:</label>
       <textarea
         id="description"
         name="description"
-        value={description}
-        onChange={handleDescriptionChange}
+        value={formState.description}
+        onChange={handleInputChange}
       ></textarea>
 
       <label htmlFor="tags">Tags (comma-separated):</label>
@@ -67,14 +115,26 @@ export default function CreatePost() {
         type="text"
         id="tags"
         name="tags"
-        value={tags.join(",")}
-        onChange={handleTagChange}
+        value={formState.tags}
+        onChange={handleInputChange}
       />
 
-      <ReactQuill theme="snow" value={content} onChange={handleContentChange} />
+      <ReactQuill
+        theme="snow"
+        value={formState.content}
+        onChange={handleContentChange}
+      />
 
-      <button onClick={() => widgetRef.current.open()}>upload</button>
-      <button type="button">Submit</button>
+      <button onClick={() => widgetRef.current.open()}>Upload Image</button>
+
+      {formState.imageURL && (
+        <div>
+          <h4>Uploaded Image:</h4>
+          <img src={formState.imageURL} alt="Uploaded" />
+        </div>
+      )}
+
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 }

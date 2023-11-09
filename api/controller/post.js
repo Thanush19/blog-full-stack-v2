@@ -1,4 +1,5 @@
 const db = require("../db/db");
+const cloudinary = require("cloudinary").v2;
 
 const writePost = async (req, res) => {
   try {
