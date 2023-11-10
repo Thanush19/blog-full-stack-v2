@@ -35,6 +35,14 @@ function App() {
           }
         />
         <Route
+          path="/all-posts"
+          element={
+            <ProtectedRoute>
+              <AllPost />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/posts"
           element={
             <ProtectedRoute>

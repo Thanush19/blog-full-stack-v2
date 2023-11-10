@@ -1,5 +1,7 @@
 const db = require("../db/db");
 const cloudinary = require("cloudinary").v2;
+const axios = require("axios");
+const { NEWS_API_KEY } = process.env;
 
 const writePost = async (req, res) => {
   try {
@@ -15,13 +17,105 @@ const writePost = async (req, res) => {
   }
 };
 
-const getAllPosts = async (req, res) => {
+const getAllPostsFromDb = async (req, res) => {
   try {
     const result = await db.query("SELECT * FROM posts");
     res.status(200).json(result.rows);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to retrieve posts" });
+  }
+};
+const getNewsByKeyword = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+
+    // Construct the API request URL based on the provided keyword
+    const apiUrl = "https://newsapi.org/v2/everything";
+    const apiKey = process.env.NEWS_API_KEY;
+
+    const apiParams = {
+      apiKey,
+      q: keyword,
+    };
+
+    // Fetch news from the external API based on the keyword
+    const apiResult = await axios.get(apiUrl, { params: apiParams });
+
+    // Respond with the news from the external API
+    res.status(200).json({ apiNews: apiResult.data.articles });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve news" });
+  }
+};
+
+const getFormattedDate = (date) => {
+  // Assuming the incoming date is in the format DD-MM-YYYY
+  const [day, month, year] = date.split("-");
+  return `${year}-${month}-${day}`;
+};
+
+// const getNewsByDate = async (req, res) => {
+//   try {
+//     const { date, keyword, sources, domains, language } = req.query;
+//     const formattedDate = getFormattedDate(date);
+
+//     // Build query parameters based on user input
+//     const queryParams = {
+//       from: formattedDate,
+//       sortBy: "publishedAt",
+//       apiKey: NEWS_API_KEY,
+//     };
+
+//     // Add optional parameters if provided
+//     if (keyword) queryParams.q = keyword;
+//     if (sources) queryParams.sources = sources;
+//     if (domains) queryParams.domains = domains;
+//     if (language) queryParams.language = language;
+
+//     // Construct the URL with query parameters
+//     const apiUrl = `https://newsapi.org/v2/everything`;
+
+//     // Make a request to the external API with the constructed URL and query parameters
+//     const apiResponse = await axios.get(apiUrl, { params: queryParams });
+
+//     // Extract relevant information from the API response if needed
+//     const apiNewsByDate = apiResponse.data;
+
+//     // Respond with the news by date
+//     res.status(200).json({ apiNewsByDate });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: "Failed to retrieve news" });
+//   }
+// };
+const getAllNewsFromApi = async (req, res) => {
+  try {
+    // Default values for parameters
+    const defaultParams = {
+      q: "general",
+      from: "2023-10-10",
+      sortBy: "publishedAt",
+    };
+
+    // Merge default values with provided query parameters
+    const { q, from, sortBy } = { ...defaultParams, ...req.query };
+
+    // Construct the URL for fetching news from the external API
+    const apiUrl = `https://newsapi.org/v2/everything?q=${q}&from=${from}&sortBy=${sortBy}&apiKey=${NEWS_API_KEY}`;
+
+    // Make a request to the external API
+    const apiResponse = await axios.get(apiUrl);
+
+    // Extract relevant information from the API response if needed
+    const allNews = apiResponse.data;
+
+    // Respond with the fetched news
+    res.status(200).json(allNews);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve news" });
   }
 };
 
@@ -81,7 +175,10 @@ const editPost = async (req, res) => {
 
 module.exports = {
   writePost,
-  getAllPosts,
+  getAllPostsFromDb,
+  getNewsByKeyword,
+  getAllNewsFromApi,
+  // getNewsByDate,
   getPost,
   deletePost,
   editPost,

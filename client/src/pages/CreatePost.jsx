@@ -110,7 +110,7 @@ export default function CreatePost() {
         onChange={handleInputChange}
       ></textarea>
 
-      <label htmlFor="tags">Tags (comma-separated):</label>
+      <label htmlFor="tags">Tags</label>
       <input
         type="text"
         id="tags"

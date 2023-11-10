@@ -29,7 +29,7 @@ const Home = () => {
       {isSignedIn && (
         <>
           <Link to="/create-post">Write Blog post</Link>
-          <p>See all blog posts</p>
+          <Link to="/all-posts">See all blog posts</Link>
         </>
       )}
     </>
