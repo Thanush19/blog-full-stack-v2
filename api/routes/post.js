@@ -4,6 +4,7 @@ const {
   writePost,
   getPost,
   getAllPostsFromDb,
+  getPostDetails,
   getAllNewsFromApi,
   deletePost,
   editPost,
@@ -39,5 +40,7 @@ router.delete("/delete/:post_id", deletePost); // Corrected the route path
 
 // Edit a post by post_id
 router.put("/edit/:post_id", editPost); // Corrected the route path
+
+router.get("/details/:user_id", getPostDetails);
 
 module.exports = router;

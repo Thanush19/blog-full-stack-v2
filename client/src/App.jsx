@@ -13,8 +13,13 @@ import {
 import ProtectedRoute from "../utils/ProtectedRoute";
 import CreatePost from "./pages/CreatePost";
 import AllPost from "./pages/AllPost";
+import SinglePost from "./pages/SinglePost";
+import DashBoard from "./pages/DashBoard";
+import { useUser, useAuth } from "@clerk/clerk-react";
 
 function App() {
+  const { userId, sessionId, getToken } = useAuth();
+
   return (
     <BrowserRouter>
       <Routes>
@@ -34,14 +39,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
+        {/* <Route
           path="/all-posts"
           element={
             <ProtectedRoute>
               <AllPost />
             </ProtectedRoute>
           }
-        />
+        /> */}
         <Route
           path="/posts"
           element={
@@ -50,6 +55,23 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/post/:postId"
+          element={
+            <ProtectedRoute>
+              <SinglePost />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={`/dashboard/${userId}`}
+          element={
+            <ProtectedRoute>
+              <DashBoard />
+            </ProtectedRoute>
+          }
+        />
+
         <Route
           path="/sign-in/*"
           element={<SignIn routing="path" path="/sign-in" />}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import backend_url from "../../utils/constants";
+import { Link } from "react-router-dom";
 
 const AllPost = () => {
   const [news, setNews] = useState([]);
@@ -71,6 +72,7 @@ const AllPost = () => {
         {posts.map((post) => (
           <div key={post.post_id} style={{ marginBottom: "20px" }}>
             <h3>{post.title}</h3>
+            <p> By {post.username}</p>
             <img
               src={post.image}
               alt={post.title}
@@ -81,6 +83,8 @@ const AllPost = () => {
               Published on:{" "}
               {new Date(post.timestamp).toLocaleDateString("en-GB")}
             </p>
+            <Link to={`/post/${post.post_id}`}>Continue reading...</Link>
+
             <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
             {/* You can display other details as needed */}
           </div>

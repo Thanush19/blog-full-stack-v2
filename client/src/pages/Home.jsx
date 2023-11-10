@@ -21,7 +21,7 @@ const Home = () => {
           Hello! {user.firstName} {user.lastName}
         </h1>
         <hr />
-        <p>Username: {user.username}</p>
+        {/* <p>Username: {user.username}</p> */}
         <p>Email Address: {user.emailAddresses[0].emailAddress}</p>
         <button onClick={handleSignOut}>Sign Out</button>
       </div>
@@ -29,7 +29,11 @@ const Home = () => {
       {isSignedIn && (
         <>
           <Link to="/create-post">Write Blog post</Link>
+          <br />
           <Link to="/all-posts">See all blog posts</Link>
+          <br />
+          <Link to={`/dashboard/${userId}`}>Dashboard</Link>
+          <Link to="/my-blogs">my-blogs</Link>
         </>
       )}
     </>

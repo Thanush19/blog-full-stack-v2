@@ -2,15 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import { useAuth } from "@clerk/clerk-react";
+import { useUser, useAuth } from "@clerk/clerk-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import backend_url from "../../utils/constants";
 export default function CreatePost() {
-  const { isLoaded, userId, sessionId, getToken } = useAuth();
+  const { userId } = useAuth();
+  const { user } = useUser();
 
   const [formState, setFormState] = useState({
-    user_id: userId, // Set the user_id here
+    username: user.firstName,
+    user_id: userId,
     title: "",
     description: "",
     content: "",
@@ -50,6 +52,8 @@ export default function CreatePost() {
   const handleSubmit = async () => {
     // Prepare your data for submission, including the imageURL
     const postData = {
+      username: formState.username,
+
       user_id: formState.user_id,
       title: formState.title,
       description: formState.description,

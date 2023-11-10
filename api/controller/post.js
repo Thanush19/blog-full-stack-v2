@@ -5,10 +5,11 @@ const { NEWS_API_KEY } = process.env;
 
 const writePost = async (req, res) => {
   try {
-    const { user_id, title, image, description, content, tag } = req.body;
+    const { username, user_id, title, image, description, content, tag } =
+      req.body;
     const result = await db.query(
-      "INSERT INTO posts (user_id, title, image, description, content, tag) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-      [user_id, title, image, description, content, tag]
+      "INSERT INTO posts (username, user_id, title, image, description, content, tag) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [username, user_id, title, image, description, content, tag]
     );
     res.status(201).json(result.rows[0]);
   } catch (error) {
@@ -55,41 +56,25 @@ const getFormattedDate = (date) => {
   const [day, month, year] = date.split("-");
   return `${year}-${month}-${day}`;
 };
+const getPostDetails = async (req, res) => {
+  const { user_id } = req.params; // Use req.params.user_id
+  try {
+    const result = await db.query(
+      "SELECT COUNT(*) AS post_count, ARRAY_AGG(tag) AS tags, ARRAY_AGG(timestamp) AS timestamps FROM posts WHERE user_id = $1",
+      [user_id]
+    );
 
-// const getNewsByDate = async (req, res) => {
-//   try {
-//     const { date, keyword, sources, domains, language } = req.query;
-//     const formattedDate = getFormattedDate(date);
-
-//     // Build query parameters based on user input
-//     const queryParams = {
-//       from: formattedDate,
-//       sortBy: "publishedAt",
-//       apiKey: NEWS_API_KEY,
-//     };
-
-//     // Add optional parameters if provided
-//     if (keyword) queryParams.q = keyword;
-//     if (sources) queryParams.sources = sources;
-//     if (domains) queryParams.domains = domains;
-//     if (language) queryParams.language = language;
-
-//     // Construct the URL with query parameters
-//     const apiUrl = `https://newsapi.org/v2/everything`;
-
-//     // Make a request to the external API with the constructed URL and query parameters
-//     const apiResponse = await axios.get(apiUrl, { params: queryParams });
-
-//     // Extract relevant information from the API response if needed
-//     const apiNewsByDate = apiResponse.data;
-
-//     // Respond with the news by date
-//     res.status(200).json({ apiNewsByDate });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Failed to retrieve news" });
-//   }
-// };
+    if (result.rows.length > 0) {
+      const { post_count, tags, timestamps } = result.rows[0];
+      res.status(200).json({ post_count, tags, timestamps });
+    } else {
+      res.status(200).json({ post_count: 0, tags: [], timestamps: [] });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to retrieve post details" });
+  }
+};
 const getAllNewsFromApi = async (req, res) => {
   try {
     // Default values for parameters
@@ -176,6 +161,7 @@ const editPost = async (req, res) => {
 module.exports = {
   writePost,
   getAllPostsFromDb,
+  getPostDetails,
   getNewsByKeyword,
   getAllNewsFromApi,
   // getNewsByDate,
