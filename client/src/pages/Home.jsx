@@ -54,7 +54,7 @@ const Home = () => {
           <br />
           <Link
             className="text-white bg-black py-2 px-4 rounded hover:border-white hover:border-2  mt-2"
-            to="/all-posts"
+            to="/posts"
           >
             See all blog posts
           </Link>

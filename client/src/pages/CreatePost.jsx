@@ -28,6 +28,7 @@ export default function CreatePost() {
     const { name, value } = event.target;
     setFormState({ ...formState, [name]: value });
   };
+  const [submitted, setSubmitted] = useState(false);
 
   const cloudinaryRef = useRef();
   const widgetRef = useRef();
@@ -74,6 +75,7 @@ export default function CreatePost() {
 
       // Show a success notification
       toast.success("Post submitted successfully!");
+      setSubmitted(true);
     } catch (error) {
       if (error.response) {
         // The request was made and the server responded with a status code
@@ -95,50 +97,98 @@ export default function CreatePost() {
   };
 
   return (
-    <div className="CreatePost">
-      <h3>Create a New Post</h3>
-      <label htmlFor="title">Title:</label>
-      <input
-        type="text"
-        id="title"
-        name="title"
-        value={formState.title}
-        onChange={handleInputChange}
-      />
+    <div className="CreatePost h-[150vh] bg-p flex flex-col items-center justify-center">
+      <h3 className="text-center text-2xl md:text-4xl mb-4 font-bold">
+        Create a New Post
+      </h3>
 
-      <label htmlFor="description">Description:</label>
-      <textarea
-        id="description"
-        name="description"
-        value={formState.description}
-        onChange={handleInputChange}
-      ></textarea>
-
-      <label htmlFor="tags">Tags</label>
-      <input
-        type="text"
-        id="tags"
-        name="tags"
-        value={formState.tags}
-        onChange={handleInputChange}
-      />
-
-      <ReactQuill
-        theme="snow"
-        value={formState.content}
-        onChange={handleContentChange}
-      />
-
-      <button onClick={() => widgetRef.current.open()}>Upload Image</button>
-
-      {formState.imageURL && (
-        <div>
-          <h4>Uploaded Image:</h4>
-          <img src={formState.imageURL} alt="Uploaded" />
+      <div className="w-[70vw] border border-black p-3 h-[130vh] rounded-xl">
+        <div className="mb-4">
+          <label htmlFor="title" className="mr-2 uppercase font-semibold">
+            Title:
+          </label>
+          <input
+            type="text"
+            id="title"
+            name="title"
+            value={formState.title}
+            onChange={handleInputChange}
+            className="border border-black rounded px-2 py-1  uppercase font-semibold"
+          />
         </div>
-      )}
 
-      <button onClick={handleSubmit}>Submit</button>
+        <div className="mb-4">
+          <label
+            htmlFor="description"
+            className="mr-2  uppercase font-semibold"
+          >
+            Description:
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={formState.description}
+            onChange={handleInputChange}
+            className="border border-black rounded px-2 py-1 w-[70%]"
+          ></textarea>
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="tags" className="mr-2  uppercase font-semibold">
+            Tags:
+          </label>
+          <input
+            type="text"
+            id="tags"
+            name="tags"
+            value={formState.tags}
+            onChange={handleInputChange}
+            className="border border-black rounded px-2 py-1  uppercase font-semibold"
+          />
+        </div>
+
+        <p>write the content here...</p>
+
+        <ReactQuill
+          theme="snow"
+          value={formState.content}
+          onChange={handleContentChange}
+          className="mb-4 border border-black bg-white h-[30vh] rounded-xl  uppercase font-semibold"
+        />
+        <div className="mt-[10vh]">
+          <label htmlFor="image  uppercase font-semibold">upload image: </label>
+          <button
+            onClick={() => widgetRef.current.open()}
+            className="border border-black rounded-2xl px-2 py-1 hover:bg-white "
+          >
+            Upload Image
+          </button>
+        </div>
+
+        {formState.imageURL && (
+          <div className="mb-4  ">
+            <h4>Uploaded Image:</h4>
+            <img
+              src={formState.imageURL}
+              className="max-w-full max-h-40 rounded-md"
+              alt="Uploaded"
+            />
+          </div>
+        )}
+        <div className=" flex justify-center my-5 ">
+          <button
+            onClick={handleSubmit}
+            className="border border-black rounded-2xl px-2 py-1 my-2 hover:bg-white"
+          >
+            Submit
+          </button>
+        </div>
+        {submitted && (
+          <p className="text-green-600 text-center font-semibold">
+            Post submitted successfully!
+          </p>
+        )}
+      </div>
     </div>
   );
 }
