@@ -2,6 +2,9 @@ import React from "react";
 import { UserButton } from "@clerk/clerk-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser, useAuth } from "@clerk/clerk-react";
+import NavBar from "../components/NavBar";
+import bg from "../assets/bg.jpg";
+
 const Home = () => {
   const navigate = useNavigate();
   const { isLoaded, isSignedIn, user } = useUser();
@@ -12,31 +15,59 @@ const Home = () => {
     await signOut();
     navigate("/sign-in");
   };
+
   if (!isLoaded || !isSignedIn) return null;
 
   return (
-    <>
-      <div className="mt-5">
-        <h1>
-          Hello! {user.firstName} {user.lastName}
+    <div
+      className="min-h-screen w-screen flex flex-col items-center justify-center text-black"
+      style={{
+        backgroundImage: `url(${bg})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the alpha value as needed
+      }}
+    >
+      <NavBar />
+      <div className="mt-5 text-black">
+        <h1 className="text-3xl font-bold  md:text-5xl">
+          Hello! {user.firstName}
         </h1>
-        <hr />
-        {/* <p>Username: {user.username}</p> */}
-        <p>Email Address: {user.emailAddresses[0].emailAddress}</p>
-        <button onClick={handleSignOut}>Sign Out</button>
+        <hr className="border-t-2 border-black my-4" />
+        {/* <p>Email Address: {user.emailAddresses[0].emailAddress}</p> */}
+        {/* <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleSignOut}
+        >
+          Sign Out
+        </button> */}
       </div>
-      <UserButton />
+      {/* <UserButton /> */}
       {isSignedIn && (
         <>
-          <Link to="/create-post">Write Blog post</Link>
+          <Link
+            className="text-white bg-black py-2 px-4 rounded hover:border-white hover:border-2"
+            to="/create-post"
+          >
+            Write Blog post
+          </Link>
           <br />
-          <Link to="/all-posts">See all blog posts</Link>
+          <Link
+            className="text-white bg-black py-2 px-4 rounded hover:border-white hover:border-2  mt-2"
+            to="/all-posts"
+          >
+            See all blog posts
+          </Link>
           <br />
-          <Link to={`/dashboard/${userId}`}>Dashboard</Link>
-          <Link to="/my-blogs">my-blogs</Link>
+          <Link
+            className="text-white bg-black py-2 px-4 rounded hover:border-white hover:border-2 mt-2"
+            to={`/my-blogs/${userId}`}
+          >
+            My Blogs
+          </Link>
         </>
       )}
-    </>
+    </div>
   );
 };
 

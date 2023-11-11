@@ -16,6 +16,8 @@ import AllPost from "./pages/AllPost";
 import SinglePost from "./pages/SinglePost";
 import DashBoard from "./pages/DashBoard";
 import { useUser, useAuth } from "@clerk/clerk-react";
+import MyBlogs from "./pages/MyBlogs";
+import EditPost from "./pages/EditPost";
 
 function App() {
   const { userId, sessionId, getToken } = useAuth();
@@ -68,6 +70,22 @@ function App() {
           element={
             <ProtectedRoute>
               <DashBoard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/my-blogs/:userId"
+          element={
+            <ProtectedRoute>
+              <MyBlogs />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/edit/:postId"
+          element={
+            <ProtectedRoute>
+              <EditPost />
             </ProtectedRoute>
           }
         />

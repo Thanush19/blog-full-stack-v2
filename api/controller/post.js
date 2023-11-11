@@ -57,10 +57,10 @@ const getFormattedDate = (date) => {
   return `${year}-${month}-${day}`;
 };
 const getPostDetails = async (req, res) => {
-  const { user_id } = req.params; // Use req.params.user_id
+  const { user_id } = req.params;
   try {
     const result = await db.query(
-      "SELECT COUNT(*) AS post_count, ARRAY_AGG(tag) AS tags, ARRAY_AGG(timestamp) AS timestamps FROM posts WHERE user_id = $1",
+      "SELECT COUNT(*) AS post_count, ARRAY(SELECT DISTINCT tag FROM posts WHERE user_id = $1) AS tags, ARRAY_AGG(timestamp) AS timestamps FROM posts WHERE user_id = $1",
       [user_id]
     );
 
@@ -75,6 +75,7 @@ const getPostDetails = async (req, res) => {
     res.status(500).json({ error: "Failed to retrieve post details" });
   }
 };
+
 const getAllNewsFromApi = async (req, res) => {
   try {
     // Default values for parameters
@@ -138,7 +139,6 @@ const deletePost = async (req, res) => {
     res.status(500).json({ error: "Failed to delete the post" });
   }
 };
-
 const editPost = async (req, res) => {
   const post_id = req.params.post_id;
   const { user_id, title, image, description, content, tag } = req.body;
@@ -147,6 +147,7 @@ const editPost = async (req, res) => {
       "UPDATE posts SET user_id = $1, title = $2, image = $3, description = $4, content = $5, tag = $6 WHERE post_id = $7 RETURNING *",
       [user_id, title, image, description, content, tag, post_id]
     );
+
     if (result.rows.length === 0) {
       res.status(404).json({ message: "Post not found" });
     } else {
