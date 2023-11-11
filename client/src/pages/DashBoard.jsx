@@ -4,6 +4,15 @@ import { useUser } from "@clerk/clerk-react";
 import { useParams } from "react-router-dom";
 import backend_url from "../../utils/constants";
 
+const formatDate = (timestamp) => {
+  const date = new Date(timestamp);
+  const day = date.getDate().toString().padStart(2, "0");
+  const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Note: Months are zero-based
+  const year = date.getFullYear();
+
+  return `${day}-${month}-${year}`;
+};
+
 const DashBoard = () => {
   const { userId } = useParams();
   const { isLoaded, isSignedIn, user } = useUser();
@@ -23,6 +32,7 @@ const DashBoard = () => {
         setPostDetails(response.data);
       } catch (error) {
         console.error("Failed to fetch post details:", error.message);
+        console.error("Error response:", error.response);
       }
     };
 
@@ -49,7 +59,7 @@ const DashBoard = () => {
           <p>
             Post Timestamps:{" "}
             {postDetails.timestamps
-              ? postDetails.timestamps.join(", ")
+              ? postDetails.timestamps.map(formatDate).join(", ")
               : "No timestamps"}
           </p>
         </div>

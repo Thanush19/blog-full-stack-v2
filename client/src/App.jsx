@@ -64,7 +64,7 @@ function App() {
           }
         />
         <Route
-          path={`/dashboard/${userId}`}
+          path="/dashboard/:userId"
           element={
             <ProtectedRoute>
               <DashBoard />
