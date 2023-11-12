@@ -4,11 +4,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        r: "#ce2d0d", // r-"#ce2d0d"
-        y: "#f0b214", // y-"#f0b214"
-        p: "#f2c6a5", // p-"#f2c6a5"
-        w: "#ffffff", // b-#ffffff
-        b: "#000000", // w-#000000
+        r: "#ce2d0d",
+        y: "#f0b214",
+        p: "#f2c6a5",
+        w: "#ffffff",
+        b: "#000000",
       },
     },
   },

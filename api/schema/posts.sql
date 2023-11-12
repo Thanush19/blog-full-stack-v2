@@ -1,6 +1,4 @@
--- Drop the existing "posts" table if it exists
 
--- Create the "posts" table with the new structure
 CREATE TABLE posts (
     post_id SERIAL PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,

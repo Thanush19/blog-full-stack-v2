@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import moment from "moment"; // Import moment
+import moment from "moment";
 import backend_url from "../../utils/constants";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCalendarAlt, faAt } from "@fortawesome/free-solid-svg-icons"; // Import the required icon
+import { faCalendarAlt, faAt } from "@fortawesome/free-solid-svg-icons";
+import { useParams, useNavigate } from "react-router-dom"; // Import useParams and useNavigate
 
 const AllPost = () => {
   const [news, setNews] = useState([]);
+  const navigate = useNavigate();
+
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -22,9 +25,17 @@ const AllPost = () => {
 
     fetchPosts();
   }, []);
-
+  const goBack = () => {
+    navigate(-1);
+  };
   return (
     <div className="p-6">
+      <button
+        className="bg-black text-white  px-4 py-2 rounded-2xl  "
+        onClick={goBack}
+      >
+        Back
+      </button>
       <h1 className="text-2xl font-bold text-center">Latest News</h1>
 
       <div className="text-black bg-p p-6 border rounded-xl">

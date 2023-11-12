@@ -34,33 +34,25 @@ const Home = () => {
           Hello! {user.firstName}
         </h1>
         <hr className="border-t-2 border-black my-4" />
-        {/* <p>Email Address: {user.emailAddresses[0].emailAddress}</p> */}
-        {/* <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleSignOut}
-        >
-          Sign Out
-        </button> */}
       </div>
-      {/* <UserButton /> */}
       {isSignedIn && (
         <>
           <Link
-            className="text-white bg-black py-2 px-4 rounded hover:border-white hover:border-2"
+            className="text-white bg-black py-2 px-4 rounded-2xl hover:border-white hover:border-2"
             to="/create-post"
           >
             Write Blog post
           </Link>
           <br />
           <Link
-            className="text-white bg-black py-2 px-4 rounded hover:border-white hover:border-2  mt-2"
+            className="text-white bg-black py-2 px-4 rounded-2xl hover:border-white hover:border-2  mt-2"
             to="/posts"
           >
             See all blog posts
           </Link>
           <br />
           <Link
-            className="text-white bg-black py-2 px-4 rounded hover:border-white hover:border-2 mt-2"
+            className="text-white bg-black py-2 px-4 rounded-2xl hover:border-white hover:border-2 mt-2"
             to={`/my-blogs/${userId}`}
           >
             My Blogs

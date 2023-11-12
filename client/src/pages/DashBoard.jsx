@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "@clerk/clerk-react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import backend_url from "../../utils/constants";
 import {
   BarChart,
@@ -17,7 +17,7 @@ import {
   Legend,
 } from "recharts";
 
-const colors = ["#00C49F", "#FFBB28", "#FF8042", "red", "pink"];
+const colors = ["#0d395a", "#FFBB28", "#FF8042", "red", "pink"];
 
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
@@ -42,6 +42,10 @@ const TriangleBar = (props) => {
 };
 
 const DashBoard = () => {
+  const back = useNavigate();
+  const backfn = () => {
+    back(-1);
+  };
   const { userId } = useParams();
   const { isLoaded, isSignedIn, user } = useUser();
 
@@ -69,44 +73,60 @@ const DashBoard = () => {
     }
   }, [isSignedIn, userId]);
 
-  // Group data by month and calculate post count for each month
   const groupedData = postDetails.timestamps.reduce((acc, timestamp) => {
     const key = formatDate(timestamp);
     acc[key] = (acc[key] || 0) + 1;
     return acc;
   }, {});
 
-  // Convert grouped data to an array for charting
   const chartData = Object.keys(groupedData).map((key) => ({
     name: key,
     uv: groupedData[key],
     amt: 2400,
   }));
 
-  // Create an array of unique tags
   const uniqueTags = [...new Set(postDetails.tags)];
 
   return (
-    <>
+    <div className="bg-p">
+      <button
+        className="bg-white text-black px-4 py-2 rounded-2xl hover:text-white hover:bg-black mb-4"
+        onClick={backfn}
+      >
+        Back
+      </button>
       {isSignedIn && isLoaded && user ? (
         <>
-          <h1>
+          <h1 className="text-3xl  italic font-bold text-center p-[10vh]">
             Hello! {user.firstName} {user.lastName}
           </h1>
-          <hr />
-          <p>Email Address: {user.emailAddresses[0]?.emailAddress}</p>
-          <div>
-            <h2>Your Post Details</h2>
-            <p>Total Posts: {postDetails.post_count}</p>
+          <p className="text-center text-2xl font-semibold italic">
+            This is your personalised dashboard
+          </p>
+          <p>
+            {" "}
+            <span className="font-semibold">Email Address: </span>
+            <span className="italic">
+              {user.emailAddresses[0]?.emailAddress}
+            </span>
+          </p>
+          <div className="mt-5">
+            <h2 className="text-center text-3xl underline ">
+              Your Post Details
+            </h2>
+            <p className="my-4 ">
+              <span className="font-semibold text-xl mb-5">Total Posts:</span>{" "}
+              <span className="text-xl"> {postDetails.post_count}</span>
+            </p>
             {postDetails.timestamps.length > 0 ? (
-              <ResponsiveContainer width="100%" height={400}>
+              <ResponsiveContainer width="100%" height={300}>
                 <BarChart
                   data={chartData}
                   margin={{
                     top: 20,
                     right: 30,
                     left: 20,
-                    bottom: 50, // Increased bottom margin to accommodate axis labels
+                    bottom: 50,
                   }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
@@ -143,7 +163,9 @@ const DashBoard = () => {
               <p>No post data to display</p>
             )}
           </div>
-          <h1>Posts you are interested in..</h1>
+          <p className="text-center text-2xl font-semibold underline italic">
+            Posts you are interested in..
+          </p>
           {uniqueTags.length > 0 && (
             <ResponsiveContainer width="100%" height={400}>
               <PieChart>
@@ -169,7 +191,7 @@ const DashBoard = () => {
       ) : (
         <p>Loading...</p>
       )}
-    </>
+    </div>
   );
 };
 
