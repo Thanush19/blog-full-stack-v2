@@ -3,10 +3,11 @@ require("dotenv").config();
 
 const pool = new Pool({
   user: process.env.DB_USER,
-  host: "127.0.0.1", // or your database host
+  host: "localhost",
+  // host: "127.0.0.1", // or your database host
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
-  port: 5432, // your database port
+  port: 5432,
 });
 
 pool.on("error", (err) => {
