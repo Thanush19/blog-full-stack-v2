@@ -9,7 +9,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use("/api/posts", postsRouter);
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
   res.send("Deployment successful! Welcome to your Express app.");
