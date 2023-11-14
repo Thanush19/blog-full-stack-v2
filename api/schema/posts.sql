@@ -10,3 +10,6 @@ CREATE TABLE posts (
     content TEXT NOT NULL,
     tag VARCHAR(255)[] NOT NULL
 );
+
+
+--psql -h your_host -d your_database -U your_user -a -f /path/to/your-migration-script.sql
