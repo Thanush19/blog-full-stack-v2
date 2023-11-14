@@ -35,7 +35,7 @@ const EditPost = () => {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`${backend_url}/posts/${postId}`);
+        const response = await axios.get(`${backend_url}/api/posts/${postId}`);
         setPost(response.data);
       } catch (error) {
         console.error("Failed to fetch post:", error.message);
@@ -55,7 +55,7 @@ const EditPost = () => {
 
   const handleUpdate = async () => {
     try {
-      await axios.put(`${backend_url}/posts/edit/${postId}`, post);
+      await axios.put(`${backend_url}/api/posts/edit/${postId}`, post);
       // Show update notification
       setNotification("Post updated successfully!");
       // Show preview
@@ -67,7 +67,7 @@ const EditPost = () => {
 
   const handleDelete = async () => {
     try {
-      await axios.delete(`${backend_url}/posts/delete/${postId}`);
+      await axios.delete(`${backend_url}/api/posts/delete/${postId}`);
       // Show delete notification
       setNotification("Post deleted successfully!");
       // Clear post data

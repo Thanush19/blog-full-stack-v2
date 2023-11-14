@@ -16,7 +16,7 @@ const AllPost = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`${backend_url}/posts`);
+        const response = await axios.get(`${backend_url}/api/posts`);
         setPosts(response.data);
       } catch (error) {
         console.error("Failed to fetch posts:", error.message);

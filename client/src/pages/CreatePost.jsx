@@ -66,7 +66,7 @@ export default function CreatePost() {
     try {
       // Send `postData` to your backend for further processing
       const response = await axios.post(
-        `${backend_url}/posts/write-post`,
+        `${backend_url}/api/posts/write-post`,
         postData
       );
 

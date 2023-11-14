@@ -59,7 +59,7 @@ const DashBoard = () => {
     const fetchPostDetails = async () => {
       try {
         const response = await axios.get(
-          `${backend_url}/posts/details/${userId}`
+          `${backend_url}/api/posts/details/${userId}`
         );
         setPostDetails(response.data);
       } catch (error) {

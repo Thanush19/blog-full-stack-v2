@@ -17,7 +17,7 @@ const MyBlogs = () => {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(
-          `${backend_url}/posts?user_id=${userId}`
+          `${backend_url}/api/posts?user_id=${userId}`
         );
         setPosts(response.data);
       } catch (error) {
