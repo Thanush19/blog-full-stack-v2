@@ -40,10 +40,8 @@ const getNewsByKeyword = async (req, res) => {
       q: keyword,
     };
 
-    // Fetch news from the external API based on the keyword
     const apiResult = await axios.get(apiUrl, { params: apiParams });
 
-    // Respond with the news from the external API
     res.status(200).json({ apiNews: apiResult.data.articles });
   } catch (error) {
     console.error(error);
